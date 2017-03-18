@@ -1,5 +1,6 @@
 package com.dropin.dropin;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -82,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent settingsPage = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(settingsPage);
             return true;
         }
 

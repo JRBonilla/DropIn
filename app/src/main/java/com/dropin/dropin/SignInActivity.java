@@ -39,8 +39,6 @@ public class SignInActivity extends AppCompatActivity implements
         mStatusTextView = (TextView) findViewById(R.id.status);
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
-        findViewById(R.id.disconnect_button).setOnClickListener(this);
 
         // [START configure_signin]
         // Configure sign-in to request the user's ID, email address, and basic
@@ -105,7 +103,6 @@ public class SignInActivity extends AppCompatActivity implements
         }
     }
 
-
     // [START signIn]
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -159,6 +156,7 @@ public class SignInActivity extends AppCompatActivity implements
             // findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
             Intent homePage = new Intent(SignInActivity.this, MainActivity.class);
             startActivity(homePage);
+            finish();
         } else {
             mStatusTextView.setText(R.string.signed_out);
 
@@ -188,12 +186,6 @@ public class SignInActivity extends AppCompatActivity implements
         switch (v.getId()) {
             case R.id.sign_in_button:
                 signIn();
-                break;
-            case R.id.sign_out_button:
-                signOut();
-                break;
-            case R.id.disconnect_button:
-                revokeAccess();
                 break;
         }
     }
