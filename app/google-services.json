@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "466766532730",
+    "project_id": "firebase-dropin"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:466766532730:android:3d3e870cc4630751",
+        "android_client_info": {
+          "package_name": "com.dropin.dropin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "466766532730-2r9vtdagd8n9b5bsiann9194fcvjcicc.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "466766532730-8r090t0f53c2e627sppgcs4ptmdsem5v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dropin.dropin",
+            "certificate_hash": "1b2f8eeeb3c75ca642f219bf4693f37d5bf28dcc"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBC3Lx1_keE_sjUZbFS4GJSq5VH0WKT6Og"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
