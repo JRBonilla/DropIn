@@ -18,6 +18,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -27,6 +29,7 @@ public class SignInActivity extends AppCompatActivity implements
     private static final int RC_SIGN_IN = 9001;
 
     public static GoogleApiClient mGoogleApiClient;
+    private static DatabaseReference mDatabase;
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
 
@@ -90,6 +93,7 @@ public class SignInActivity extends AppCompatActivity implements
                 }
             });
         }
+
     }
 
     @Override

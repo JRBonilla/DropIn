@@ -29,6 +29,11 @@ import com.google.android.gms.auth.api.signin.SignInAccount;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
@@ -85,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(1).setIcon(R.drawable.events);
         tabLayout.getTabAt(2).setIcon(R.drawable.interests);
 
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -156,19 +162,33 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_explore, container, false);
+            final View rootView = inflater.inflate(R.layout.fragment_explore, container, false);
 
             SwipeFlingAdapterView flingContainer = (SwipeFlingAdapterView) rootView.findViewById(R.id.frame);
 
-            final ArrayList<String> al = new ArrayList<String>();
-            al.add("php");
-            al.add("c");
-            al.add("python");
-            al.add("java");
+            final ArrayList<String> al = new ArrayList<>();
+            al.add("RU Hacks");
+            al.add("Mavericks vs. Nets");
+            al.add("Man. City vs Liverpool");
+            al.add("CSCU Lan Night");
 
-            //choose your favorite adapter
             final ArrayAdapter<String> arrayAdapter;
-            arrayAdapter = new ArrayAdapter<String>(rootView.getContext(), R.layout.item, R.id.section_label, al );
+            arrayAdapter = new ArrayAdapter<>(rootView.getContext(), R.layout.item, R.id.helloText, al );
+
+            ValueEventListener postListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Events event = dataSnapshot.getValue(Events.class);
+
+                    String title = event.getTitle();
+                    al.add(title);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.w("ASD","loadPost:onCancelled", databaseError.toException());
+                }
+            };
 
             //set the listener and the adapter
             flingContainer.setAdapter(arrayAdapter);
@@ -182,13 +202,10 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onScroll(float a) {}
+                public void onScroll(float f) {}
 
                 @Override
                 public void onLeftCardExit(Object dataObject) {
-                    //Do something on the left!
-                    //You also have access to the original object.
-                    //If you want to use it just cast it (String) dataObject
                 }
 
                 @Override
@@ -198,10 +215,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onAdapterAboutToEmpty(int itemsInAdapter) {
                     // Ask for more data here
-                    al.add("XML ".concat(String.valueOf(i)));
-                    arrayAdapter.notifyDataSetChanged();
-                    Log.d("LIST", "notified");
-                    i++;
                 }
             });
 
@@ -212,8 +225,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText("Explore");
             return rootView;
         }
     }
