@@ -76,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.getTabAt(0).setIcon(R.drawable.explore);
+        tabLayout.getTabAt(1).setIcon(R.drawable.events);
+        tabLayout.getTabAt(2).setIcon(R.drawable.interests);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    
+
     public static class ExploreFragment extends Fragment {
 
         public ExploreFragment() {
@@ -238,14 +242,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Explore";
-                case 1:
-                    return "My Events";
-                case 2:
-                    return "Interests";
-            }
             return null;
         }
     }
