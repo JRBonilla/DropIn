@@ -12,12 +12,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,9 @@ import com.google.android.gms.auth.api.signin.SignInAccount;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.lorentzos.flingswipe.SwipeFlingAdapterView;
+
+import java.util.ArrayList;
 
 import static com.dropin.dropin.SignInActivity.mGoogleApiClient;
 
@@ -89,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
     }
 
 
@@ -133,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static class ExploreFragment extends Fragment {
 
+        private int i;
+
         public ExploreFragment() {
         }
 
@@ -151,6 +157,61 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_explore, container, false);
+
+            SwipeFlingAdapterView flingContainer = (SwipeFlingAdapterView) rootView.findViewById(R.id.frame);
+
+            final ArrayList<String> al = new ArrayList<String>();
+            al.add("php");
+            al.add("c");
+            al.add("python");
+            al.add("java");
+
+            //choose your favorite adapter
+            final ArrayAdapter<String> arrayAdapter;
+            arrayAdapter = new ArrayAdapter<String>(rootView.getContext(), R.layout.item, R.id.section_label, al );
+
+            //set the listener and the adapter
+            flingContainer.setAdapter(arrayAdapter);
+            flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
+                @Override
+                public void removeFirstObjectInAdapter() {
+                    // this is the simplest way to delete an object from the Adapter (/AdapterView)
+                    Log.d("LIST", "removed object!");
+                    al.remove(0);
+                    arrayAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onScroll(float a) {}
+
+                @Override
+                public void onLeftCardExit(Object dataObject) {
+                    //Do something on the left!
+                    //You also have access to the original object.
+                    //If you want to use it just cast it (String) dataObject
+                }
+
+                @Override
+                public void onRightCardExit(Object dataObject) {
+                }
+
+                @Override
+                public void onAdapterAboutToEmpty(int itemsInAdapter) {
+                    // Ask for more data here
+                    al.add("XML ".concat(String.valueOf(i)));
+                    arrayAdapter.notifyDataSetChanged();
+                    Log.d("LIST", "notified");
+                    i++;
+                }
+            });
+
+            // Optionally add an OnItemClickListener
+            flingContainer.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClicked(int itemPosition, Object dataObject) {
+                }
+            });
+
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText("Explore");
             return rootView;
