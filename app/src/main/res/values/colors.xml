@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ff9800</color>
-    <color name="colorPrimaryDark">#f57c00</color>
+    <color name="colorPrimary">#FF5722</color>      <!-- ff9800 -->
+    <color name="colorPrimaryDark">#E64A19</color>  <!-- f57c00 -->
     <color name="colorAccent">#2196f3</color>
 
     <!-- Intro screen colours -->
