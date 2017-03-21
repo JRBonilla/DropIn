@@ -3,4 +3,36 @@
     <color name="colorPrimary">#ff9800</color>
     <color name="colorPrimaryDark">#f57c00</color>
     <color name="colorAccent">#2196f3</color>
+
+    <!-- Intro screen colours -->
+    <color name="bg_screen1">#FF9800</color>
+    <color name="bg_screen2">#DB2B39</color>
+    <color name="bg_screen3">#29335C</color>
+    <color name="bg_screen4">#FF6201</color>
+
+    <!-- Dot inactive colours -->
+    <color name="dot_dark_screen1">#BA6F00</color>
+    <color name="dot_dark_screen2">#9E1F2A</color>
+    <color name="dot_dark_screen3">#13182B</color>
+    <color name="dot_dark_screen4">#BC4800</color>
+
+    <!-- Dot active colours -->
+    <color name="dot_light_screen1">#BA8332</color>
+    <color name="dot_light_screen2">#9E4048</color>
+    <color name="dot_light_screen3">#21232B</color>
+    <color name="dot_light_screen4">#BC6834</color>
+
+    <array name="array_dot_active">
+        <item>@color/dot_light_screen1</item>
+        <item>@color/dot_light_screen2</item>
+        <item>@color/dot_light_screen3</item>
+        <item>@color/dot_light_screen4</item>
+    </array>
+
+    <array name="array_dot_inactive">
+        <item>@color/dot_dark_screen1</item>
+        <item>@color/dot_dark_screen2</item>
+        <item>@color/dot_dark_screen3</item>
+        <item>@color/dot_dark_screen4</item>
+    </array>
 </resources>

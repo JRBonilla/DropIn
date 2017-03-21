@@ -1,9 +1,5 @@
 package com.dropin.dropin;
 
-/**
- * Created by TheRe on 2017-03-19.
- */
-
 public class Events {
 
     private String title;

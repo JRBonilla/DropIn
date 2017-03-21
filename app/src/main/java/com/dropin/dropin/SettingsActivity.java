@@ -20,12 +20,7 @@ import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-
 import java.util.List;
-import java.util.prefs.PreferenceChangeListener;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On

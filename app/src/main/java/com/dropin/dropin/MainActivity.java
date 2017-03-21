@@ -12,33 +12,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.SignInAccount;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.lorentzos.flingswipe.SwipeFlingAdapterView;
-
-import java.util.ArrayList;
-
-import static com.dropin.dropin.SignInActivity.mGoogleApiClient;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,12 +36,16 @@ public class MainActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
+
+    @SuppressWarnings("FieldCanBeLocal")
     private ViewPager mViewPager;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onStart() {
@@ -86,11 +76,13 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        // Add the tab icons
         tabLayout.getTabAt(0).setIcon(R.drawable.explore);
         tabLayout.getTabAt(1).setIcon(R.drawable.events);
         tabLayout.getTabAt(2).setIcon(R.drawable.interests);
 
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        // DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -117,33 +109,35 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent settingsPage = new Intent(MainActivity.this, SettingsActivity.class);
-
-            startActivity(settingsPage);
-            return true;
-        }
-        else if (id == R.id.action_signout) {
-            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // ...
-                        Toast.makeText(getApplicationContext(),"Logged Out", Toast.LENGTH_SHORT).show();
-                        Intent signInPage = new Intent(MainActivity.this, SignInActivity.class);
-                        startActivity(signInPage);
-                        finish();
-                    }
-                });
+        // Handle the options
+        switch (id) {
+            case R.id.action_settings:
+                Intent settingsPage = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(settingsPage);
+                return true;
+            case R.id.action_sign_out:
+                signOut();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public static class ExploreFragment extends Fragment {
+    // Signs the user out of the app
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        Toast.makeText(getApplicationContext(),"Logged Out", Toast.LENGTH_SHORT).show();
+                        Intent signInPage = new Intent(MainActivity.this, WelcomeActivity.class);
+                        startActivity(signInPage);
+                        finish();
+                    }
+                });
+    }
 
-        private int i;
+    public static class ExploreFragment extends Fragment {
 
         public ExploreFragment() {
         }
@@ -162,70 +156,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            final View rootView = inflater.inflate(R.layout.fragment_explore, container, false);
-
-            SwipeFlingAdapterView flingContainer = (SwipeFlingAdapterView) rootView.findViewById(R.id.frame);
-
-            final ArrayList<String> al = new ArrayList<>();
-            al.add("RU Hacks");
-            al.add("Mavericks vs. Nets");
-            al.add("Man. City vs Liverpool");
-            al.add("CSCU Lan Night");
-
-            final ArrayAdapter<String> arrayAdapter;
-            arrayAdapter = new ArrayAdapter<>(rootView.getContext(), R.layout.item, R.id.helloText, al );
-
-            ValueEventListener postListener = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Events event = dataSnapshot.getValue(Events.class);
-
-                    String title = event.getTitle();
-                    al.add(title);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.w("ASD","loadPost:onCancelled", databaseError.toException());
-                }
-            };
-
-            //set the listener and the adapter
-            flingContainer.setAdapter(arrayAdapter);
-            flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
-                @Override
-                public void removeFirstObjectInAdapter() {
-                    // this is the simplest way to delete an object from the Adapter (/AdapterView)
-                    Log.d("LIST", "removed object!");
-                    al.remove(0);
-                    arrayAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onScroll(float f) {}
-
-                @Override
-                public void onLeftCardExit(Object dataObject) {
-                }
-
-                @Override
-                public void onRightCardExit(Object dataObject) {
-                }
-
-                @Override
-                public void onAdapterAboutToEmpty(int itemsInAdapter) {
-                    // Ask for more data here
-                }
-            });
-
-            // Optionally add an OnItemClickListener
-            flingContainer.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClicked(int itemPosition, Object dataObject) {
-                }
-            });
-
-            return rootView;
+            return inflater.inflate(R.layout.fragment_explore, container, false);
         }
     }
 
@@ -248,10 +179,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_events, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText("Events");
-            return rootView;
+            return inflater.inflate(R.layout.fragment_events, container, false);
         }
     }
 
@@ -274,10 +202,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_interests, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText("Interests");
-            return rootView;
+            return inflater.inflate(R.layout.fragment_interests, container, false);
         }
     }
 
@@ -285,16 +210,15 @@ public class MainActivity extends AppCompatActivity {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        private SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
                     return ExploreFragment.newInstance();
