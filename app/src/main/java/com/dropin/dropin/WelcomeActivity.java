@@ -96,7 +96,7 @@ public class WelcomeActivity extends AppCompatActivity implements GoogleApiClien
             public void onClick(View v) {
                 // checking for first page
                 int current = getItem(-1);
-                if (current > 0) {
+                if (current >= 0) {
                     // move to previous screen
                     viewPager.setCurrentItem(current);
                 }
@@ -112,8 +112,6 @@ public class WelcomeActivity extends AppCompatActivity implements GoogleApiClien
                 if (current < layouts.length) {
                     // move to next screen
                     viewPager.setCurrentItem(current);
-                } else {
-                    launchHomeScreen();
                 }
             }
         });
